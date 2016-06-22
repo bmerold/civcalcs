@@ -22,7 +22,7 @@ public class Cathedral extends Building {
 		if (owner.believes(Belief.SACRED_SITES)) {
 			tourism += 2;
 		}
-		return tourism + getTourismFromGreatWorks();
+		return tourism;
 	}
 
 }

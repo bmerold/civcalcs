@@ -82,7 +82,7 @@ public class Tile {
 		production += improvement.getProduction(this);
 		
 		if (owner.hasDiscoveredTech(Tech.SCIENTIFIC_THEORY) && resource == Resource.COAL) {
-			production += 2;
+			production += 1;
 		}
 
 		for (WorkedTileEnhancer enhancer : workedBy.getEnhancers()) {

@@ -14,12 +14,14 @@ import com.merold.civcalcs.buildings.Temple;
 
 import static com.merold.civcalcs.buildings.BuildingEnum.*;
 import com.merold.civcalcs.buildings.enhancers.WorkedTileEnhancer;
+import com.merold.civcalcs.buildings.nationalwonders.NationalWonder;
 import com.merold.civcalcs.buildings.wonders.AncientWonder;
 import com.merold.civcalcs.buildings.wonders.ClassicalWonder;
 import com.merold.civcalcs.buildings.wonders.Wonder;
 import com.merold.civcalcs.greatworks.GreatWorkOfArt;
 import com.merold.civcalcs.greatworks.GreatWorkOfMusic;
 import com.merold.civcalcs.greatworks.GreatWorkOfWriting;
+import com.merold.civcalcs.greatworks.GreatWorkSlot;
 import com.merold.civcalcs.player.Player;
 import com.merold.civcalcs.socialpolicies.SocialPolicy;
 import com.merold.civcalcs.socialpolicies.SocialPolicyUtil;
@@ -59,7 +61,8 @@ public class City {
 	private double foodAddedByGrowthModifier;
 	private double foodProduced;
 	private int[] foodToGrow = { 0, 15, 24, 33, 44, 55, 66, 77, 89, 101, 114, 126, 139, 152, 165, 179, 193, 207, 221,
-			235, 249, 264, 279, 294, 309, 324, 340, 355, 371, 387, 403, 419, 435, 452, 468, 485 };
+			235, 249, 264, 279, 294, 309, 324, 340, 355, 371, 387, 403, 419, 435, 452, 468, 485, 502, 519, 536, 553,
+			570 };
 	private double goldModifier = 0;
 	private double greatArtistPoints;
 	private double greatEngineerPoints = 0;
@@ -94,6 +97,8 @@ public class City {
 	private double foodModifier;
 	private List<TradeRoute> tradeRoutes = new ArrayList<TradeRoute>();
 	private double cityGold;
+	private double greatWorkTourismModifier;
+	private double baseTourismFromGreatWorks;
 
 	public City(String name, Player owner, Tile startingTile, List<Tile> tilesInBorder) {
 		this.name = name;
@@ -193,8 +198,41 @@ public class City {
 
 	private double calculateTourism() {
 		double tourism = 0;
-		tourism += calculateTourismFromBuildings();
+		baseTourismFromGreatWorks = calculateTourismFromGreatWorks();
+		greatWorkTourismModifier = calculateTourismModifierForGreatWorks();
+		cultureConversionToTourismRate = calculateCultureConversionToTourismRate();
+		double tourismFromGreatWorks = baseTourismFromGreatWorks * (1 + greatWorkTourismModifier);
+		double tourismFromCultureConversion = cultureConversionToTourismRate * (getCultureFromWorldWonders()); // +
+																												// calculateCultureFromTerrain());
+		double tourismFromBuildings = calculateTourismFromBuildings();
+		tourism += tourismFromGreatWorks;
+		tourism += tourismFromCultureConversion;
+		tourism += tourismFromBuildings;
 		return tourism;
+	}
+
+	public double getCultureConversionToTourismRate() {
+		return cultureConversionToTourismRate;
+	}
+
+	private double calculateCultureConversionToTourismRate() {
+		return buildings.stream().mapToDouble(t -> t.getCultureConversionToTourismRate()).sum();
+	}
+
+	public double getTourismFromGreatWorks() {
+		return baseTourismFromGreatWorks;
+	}
+
+	public double getGreatWorkTourismModifier() {
+		return greatWorkTourismModifier;
+	}
+
+	private double calculateTourismModifierForGreatWorks() {
+		return buildings.stream().mapToDouble(t -> t.getGreatWorkTourismModifier()).sum();
+	}
+
+	private double calculateTourismFromGreatWorks() {
+		return buildings.stream().mapToDouble(c -> c.getTourismFromGreatWorks()).sum();
 	}
 
 	private double calculateTourismFromBuildings() {
@@ -535,12 +573,12 @@ public class City {
 		printOutputLine(tourism, "Tourism");
 		printOutputLine(Math.floor(totalCulture), "Culture");
 		printOutputLine(MathUtil.round(localHappiness, 2), "Local Happiness");
-		printOutputLine(totalGreatEngineerPoints, "Great Engineer Points");
-		printOutputLine(totalMerchantPoints, "Great Merchant Points");
-		printOutputLine(totalScientistPoints, "Great Scientist Points");
+		printOutputLine(totalWriterPoints, "Great Writer Points");
 		printOutputLine(totalArtistPoints, "Great Artist Points");
 		printOutputLine(totalGreatMusicianPoints, "Great Musician Points");
-		printOutputLine(totalWriterPoints, "Great Writer Points");
+		printOutputLine(totalScientistPoints, "Great Scientist Points");
+		printOutputLine(totalMerchantPoints, "Great Merchant Points");
+		printOutputLine(totalGreatEngineerPoints, "Great Engineer Points");
 		printOutputLine(turnsToPopGrowth, "turns until population growth");
 
 	}
@@ -620,15 +658,23 @@ public class City {
 		double cultureFromBuildings = calculateCultureFromBuildings();
 		double cultureFromPolicies = calculateCultureFromPolicies();
 		double cultureFromSpecialists = calculateCultureFromSpecialists();
+		double cultureFromGreatWorks = calculateCultureFromGreatWorks();
 		double cultureFromReligion = calculateCultureFromReligion();
 		double cultureFromTerrain = calculateCultureFromTerrain();
 		baseCulture += cultureFromBuildings;
 		baseCulture += cultureFromPolicies;
 		baseCulture += cultureFromSpecialists;
+		baseCulture += cultureFromGreatWorks;
 		baseCulture += cultureFromReligion;
 		baseCulture += cultureFromTerrain;
 
 		return baseCulture * (1 + cultureModifier);
+	}
+
+	private double calculateCultureFromGreatWorks() {
+		double cultureFromGreatWorks = buildings.stream().flatMap(t -> t.getGreatWorks().stream())
+				.filter(t -> !t.isEmpty()).count() * 2;
+		return cultureFromGreatWorks;
 	}
 
 	private double calculateCultureFromReligion() {
@@ -647,6 +693,10 @@ public class City {
 
 		if (owner.hasAdopted(SocialPolicy.LIBERTY)) {
 			culture += 1;
+		}
+
+		if (owner.hasAdopted(SocialPolicy.MERCHANT_NAVY) && hasBuilding(BuildingEnum.EAST_INDIA_COMPANY)) {
+			culture += 4;
 		}
 		return culture;
 	}
@@ -680,7 +730,7 @@ public class City {
 
 	}
 
-	private double calculateCultureFromTerrain() {
+	public double calculateCultureFromTerrain() {
 		double culture = 0;
 		for (Tile tile : tiles) {
 			if (tile.isWorked()) {
@@ -724,7 +774,6 @@ public class City {
 		foodProduced = 0;
 		turnsToPopGrowth = 0;
 		surplusFood = 0;
-
 
 		double foodFromTerrain = calculateFoodFromTerrain();
 		double foodFromBuildings = calculateFoodFromBuildings();
@@ -944,6 +993,9 @@ public class City {
 		if (SocialPolicyUtil.playerHasCompletedTradition(owner)) {
 			modifier += 0.15;
 		}
+		if (isWeLoveTheKingDay()) {
+			modifier += 0.25;
+		}
 		return modifier;
 	}
 
@@ -1024,6 +1076,11 @@ public class City {
 				}
 			}
 		}
+
+		if (owner.hasCompleted(STATUE_OF_LIBERTY)) {
+			productionFromSpecialists += buildings.stream().filter(t -> t.getSpecialists().size() > 0)
+					.flatMap(t -> t.getSpecialists().stream()).filter(t -> t.isFilled()).count();
+		}
 		return productionFromSpecialists;
 	}
 
@@ -1091,7 +1148,9 @@ public class City {
 		baseScience += extraFromPopulation;
 		baseScience += scienceFromReligion;
 
-		return baseScience * (1 + scienceModifier);
+		double scienceFromTradeRoutes = tradeRoutes.stream().mapToDouble(t -> t.getScienceYield()).sum();
+
+		return (baseScience * (1 + scienceModifier)) + scienceFromTradeRoutes;
 	}
 
 	private double calculateExtraScienceFromPopulation() {
@@ -1245,5 +1304,28 @@ public class City {
 
 	public double getTradeRouteGoldFromBuildings(TradeRoute route) {
 		return buildings.stream().mapToDouble(t -> t.getTradeRouteGold(route)).sum();
+	}
+
+	public double getCultureFromWorldWonders() {
+
+		return buildings.stream().filter(t -> t instanceof Wonder).filter(t -> !(t instanceof NationalWonder))
+				.mapToDouble(t -> t.getBaseCulturePerTurn()).sum();
+	}
+
+	double cultureConversionToTourismRate = 0;
+	boolean isWeLoveTheKingDay = false;
+	double weLoveTheKingDayEndTurn = 0;
+
+	public void startWeLoveTheKingDay() {
+		this.isWeLoveTheKingDay = true;
+		int duration = 20;
+		this.weLoveTheKingDayEndTurn = owner.getGame().currentTurn() - 1 + duration;
+	}
+
+	public boolean isWeLoveTheKingDay() {
+		if (weLoveTheKingDayEndTurn < owner.getGame().currentTurn()) {
+			isWeLoveTheKingDay = false;
+		}
+		return isWeLoveTheKingDay;
 	}
 }

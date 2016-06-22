@@ -1,6 +1,7 @@
 package com.merold.civcalcs.tiles;
 
 import com.merold.civcalcs.science.Tech;
+import com.merold.civcalcs.socialpolicies.SocialPolicy;
 
 public class Academy extends Improvement {
 
@@ -9,6 +10,10 @@ public class Academy extends Improvement {
 		int science = 8;
 		if (tile.getOwner().hasDiscoveredTech(Tech.SCIENTIFIC_THEORY)) {
 			science += 2;
+		}
+
+		if (tile.getOwner().hasAdopted(SocialPolicy.NEW_DEAL)) {
+			science += 4;
 		}
 		return science;
 	}

@@ -12,6 +12,7 @@ import com.merold.civcalcs.buildings.nationalwonders.IronWorks;
 import com.merold.civcalcs.buildings.nationalwonders.MusiciansGuild;
 import com.merold.civcalcs.buildings.nationalwonders.NationalCollege;
 import com.merold.civcalcs.buildings.nationalwonders.NationalEpic;
+import com.merold.civcalcs.buildings.nationalwonders.NationalIntelligenceAgency;
 import com.merold.civcalcs.buildings.nationalwonders.OxfordUniversity;
 import com.merold.civcalcs.buildings.nationalwonders.WritersGuild;
 import com.merold.civcalcs.buildings.wonders.Alhambra;
@@ -19,8 +20,11 @@ import com.merold.civcalcs.buildings.wonders.AngkorWat;
 import com.merold.civcalcs.buildings.wonders.BigBen;
 import com.merold.civcalcs.buildings.wonders.Borobudur;
 import com.merold.civcalcs.buildings.wonders.BrandenburgGate;
+import com.merold.civcalcs.buildings.wonders.Broadway;
 import com.merold.civcalcs.buildings.wonders.ChichenItza;
 import com.merold.civcalcs.buildings.wonders.Colossus;
+import com.merold.civcalcs.buildings.wonders.CristoRedentor;
+import com.merold.civcalcs.buildings.wonders.EifelTower;
 import com.merold.civcalcs.buildings.wonders.ForbiddenPalace;
 import com.merold.civcalcs.buildings.wonders.GlobeTheater;
 import com.merold.civcalcs.buildings.wonders.GreatLibrary;
@@ -30,18 +34,22 @@ import com.merold.civcalcs.buildings.wonders.GreatWall;
 import com.merold.civcalcs.buildings.wonders.HagiaSophia;
 import com.merold.civcalcs.buildings.wonders.HangingGardens;
 import com.merold.civcalcs.buildings.wonders.HimejiCastle;
+import com.merold.civcalcs.buildings.wonders.Kremlin;
 import com.merold.civcalcs.buildings.wonders.LeaningTowerOfPisa;
 import com.merold.civcalcs.buildings.wonders.Louvre;
 import com.merold.civcalcs.buildings.wonders.MachPichu;
 import com.merold.civcalcs.buildings.wonders.MausoleumOfHalicarnassus;
+import com.merold.civcalcs.buildings.wonders.Neuschwanstein;
 import com.merold.civcalcs.buildings.wonders.NotreDame;
 import com.merold.civcalcs.buildings.wonders.Oracle;
 import com.merold.civcalcs.buildings.wonders.Parthenon;
 import com.merold.civcalcs.buildings.wonders.Petra;
 import com.merold.civcalcs.buildings.wonders.PorcelainTower;
+import com.merold.civcalcs.buildings.wonders.Prora;
 import com.merold.civcalcs.buildings.wonders.Pyramids;
 import com.merold.civcalcs.buildings.wonders.RedFort;
 import com.merold.civcalcs.buildings.wonders.SistineChapel;
+import com.merold.civcalcs.buildings.wonders.StatueOfLiberty;
 import com.merold.civcalcs.buildings.wonders.StatueOfZeus;
 import com.merold.civcalcs.buildings.wonders.Stonehenge;
 import com.merold.civcalcs.buildings.wonders.TajMahal;
@@ -164,8 +172,15 @@ public enum BuildingEnum {
 	RED_FORT(METALLURGY),
 	LOUVRE(ARCHAEOLOGY),
 	BIG_BEN(INDUSTRIALIZATION, SocialPolicy.COMMERCE),
-	BRANDENBURG_GATE(MILITARY_SCIENCE)
-	;
+	BRANDENBURG_GATE(MILITARY_SCIENCE),
+	EIFEL_TOWER(RADIO),
+	NATIONAL_INTELLIGENCE_AGENCY(RADIO, POLICE_STATION),
+	BROADWAY(RADIO),
+	STATUE_OF_LIBERTY(REPLACEABLE_PARTS, SocialPolicy.FREEDOM),
+	PRORA(FLIGHT, SocialPolicy.AUTOCRACY),
+	KREMLIN(RAILROAD, SocialPolicy.ORDER),
+	NEUSCHWANSTEIN(RAILROAD, TerrainFeature.MOUNTAIN),
+	CRISTO_REDENTOR(PLASTICS);
 
 	public boolean isRequiresHolyCity() {
 		return requiresHolyCity;
@@ -212,7 +227,7 @@ public enum BuildingEnum {
 		this.requiredTech = requiredTech;
 		this.requiresHolyCity = requiresHolyCity;
 	}
-	
+
 	BuildingEnum(Tech requiredTech, boolean requiresHolyCity, BuildingEnum required) {
 		this.requiredTech = requiredTech;
 		this.requiresHolyCity = requiresHolyCity;
@@ -244,7 +259,7 @@ public enum BuildingEnum {
 		this.requiredTech = requiredTech;
 		this.requiredTerrainFeature = feature;
 	}
-	
+
 	BuildingEnum(TerrainFeature feature, Tech requiredTech) {
 		this.requiredTech = requiredTech;
 		this.disallowedTerrainFeature = feature;
@@ -580,6 +595,30 @@ public enum BuildingEnum {
 		case BRANDENBURG_GATE:
 			building = new BrandenburgGate(city, owner);
 			break;
+		case EIFEL_TOWER:
+			building = new EifelTower(city, owner);
+			break;
+		case NATIONAL_INTELLIGENCE_AGENCY:
+			building = new NationalIntelligenceAgency(city, owner);
+			break;
+		case BROADWAY:
+			building = new Broadway(city, owner);
+			break;
+		case STATUE_OF_LIBERTY:
+			building = new StatueOfLiberty(city, owner);
+			break;
+		case PRORA:
+			building = new Prora(city, owner);
+			break;
+		case NEUSCHWANSTEIN:
+			building = new Neuschwanstein(city, owner);
+			break;
+		case KREMLIN:
+			building = new Kremlin(city, owner);
+			break;
+		case CRISTO_REDENTOR:
+			building = new CristoRedentor(city, owner);
+			break;
 		default:
 			throw new RuntimeException("Unhandled BuildingEnum " + this);
 		}
@@ -593,7 +632,7 @@ public enum BuildingEnum {
 	public TerrainFeature[] getRequiredTerrainFeature() {
 		return requiredTerrainFeature;
 	}
-	
+
 	public TerrainFeature getDisallowedTerrainFeature() {
 		return disallowedTerrainFeature;
 	}

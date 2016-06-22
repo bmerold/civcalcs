@@ -9,6 +9,10 @@ import com.merold.civcalcs.player.Player;
 
 public class CargoShip extends Unit {
 
+	public TradeRoute getRoute() {
+		return route;
+	}
+
 	private City homeCity;
 	private TradeRoute route;
 
@@ -41,9 +45,20 @@ public class CargoShip extends Unit {
 			throw new RuntimeException("No open trade route slots.");
 		}
 
-		Optional<TradeRoute> tradeRoute = homeCity.getTradeRoutes().stream().filter(t -> t.isAvailable())
+		Optional<TradeRoute> tradeRoute = homeCity.getTradeRoutes().stream()
+				.filter(t -> t.isAvailable())
 				.filter(t -> t.routeType == RouteType.SEA)
-				.sorted((t1, t2) -> t2.getGoldYield().compareTo(t1.getGoldYield())).findFirst();
+				.filter(t -> {
+					boolean cityStateEmbargo = t.getSourceCity().getOwner().getGame().isCityStateEmbargo();
+					boolean cityState =  t.getTargetCity().getCiv() == null;
+					if (cityStateEmbargo && cityState) {
+						return false;
+					} else {
+						return true;
+					}
+				})
+				.sorted((t1, t2) -> t2.getGoldYield().compareTo(t1.getGoldYield()))
+				.findFirst();
 		if (!tradeRoute.isPresent()) {
 			throw new RuntimeException("Couldn't find an available trade route.");
 		}
@@ -59,5 +74,12 @@ public class CargoShip extends Unit {
 		this.route = null;
 		owner.removeTradeRoute();
 		establishTradeRoute();
+	}
+
+	public void cancelTradeRoute() {
+		this.route.unassignUnit(this);
+		this.route = null;
+		owner.removeTradeRoute();
+		
 	}
 }

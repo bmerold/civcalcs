@@ -25,9 +25,6 @@ public class EastIndiaCompany extends NationalWonder {
 	@Override
 	public double getBaseCulturePerTurn() {
 		double culture = super.getBaseCulturePerTurn();
-		if (owner.hasAdopted(SocialPolicy.MERCHANT_NAVY)) {
-			culture += 4;
-		}
 		return culture;
 	}
 	

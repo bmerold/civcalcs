@@ -16,7 +16,11 @@ public class HolySite extends Improvement {
 
 	@Override
 	public double getFaith(Tile tile) {
-		return 6;
+		double faith = 6;
+		if (tile.getOwner().hasAdopted(SocialPolicy.NEW_DEAL)) {
+			faith += 4;
+		}
+		return faith;
 	}
 
 	@Override

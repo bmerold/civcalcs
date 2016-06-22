@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.merold.civcalcs.buildings.enhancers.WorkedTileEnhancer;
+import com.merold.civcalcs.buildings.nationalwonders.NationalWonder;
+import com.merold.civcalcs.buildings.wonders.Wonder;
 import com.merold.civcalcs.city.Buildable;
 import com.merold.civcalcs.city.City;
 import com.merold.civcalcs.city.TradeRoute;
@@ -76,9 +78,33 @@ public class Project implements Buildable {
 	protected double greatWorkTourismModifier;
 	protected double cultureConversionToTourismRate;
 	private double tradeRouteBonus;
+	protected double tourismModifier;
+
+	public double getTourismModifier() {
+		return tourismModifier;
+	}
 
 	public int getGreatWorkOfMusicSlots() {
 		return greatWorkOfMusicSlots;
+	}
+	
+	public List<SpecialistSlot> getSpecialists() {
+		List<SpecialistSlot> specialists = new ArrayList<SpecialistSlot>();
+		specialists.addAll(merchants);
+		specialists.addAll(scientists);
+		specialists.addAll(engineers);
+		specialists.addAll(artists);
+		specialists.addAll(musicians);
+		specialists.addAll(writers);
+		return specialists;
+	}
+	
+	public List<GreatWorkSlot> getGreatWorks() {
+		List<GreatWorkSlot> greatWorks = new ArrayList<GreatWorkSlot>();
+		greatWorks.addAll(gwofArtSlots);
+		greatWorks.addAll(gwofMusicSlots);
+		greatWorks.addAll(gwofWritingSlots);
+		return greatWorks;
 	}
 
 	public BuildingEnum getRequiredBuilding() {
@@ -101,23 +127,7 @@ public class Project implements Buildable {
 	}
 
 	public double getBaseCulturePerTurn() {
-		double cultureFromGreatWorks = 0;
-		for (GreatWorkSlot slot : gwofArtSlots) {
-			if (!slot.isEmpty()) {
-				cultureFromGreatWorks += 2;
-			}
-		}
-		for (GreatWorkSlot slot : gwofWritingSlots) {
-			if (!slot.isEmpty()) {
-				cultureFromGreatWorks += 2;
-			}
-		}
-		for (GreatWorkSlot slot : gwofMusicSlots) {
-			if (!slot.isEmpty()) {
-				cultureFromGreatWorks += 2;
-			}
-		}
-		return culturePerTurn + cultureFromGreatWorks;
+		return culturePerTurn;
 	}
 
 	public double getPotentialCulturePerTurn() {
@@ -374,7 +384,7 @@ public class Project implements Buildable {
 		outputs.put(Outputs.PRODUCTION, outputs.get(Outputs.PRODUCTION) + building.getPotentialProductionPerTurn());
 		outputs.put(Outputs.FAITH, outputs.get(Outputs.FAITH) + building.getFaithPerTurn());
 		outputs.put(Outputs.FOOD, outputs.get(Outputs.FOOD) + building.getPotentialFoodOutput());
-		outputs.put(Outputs.TOURISM, outputs.get(Outputs.TOURISM) + building.getTourismPerTurn());
+		outputs.put(Outputs.TOURISM, outputs.get(Outputs.TOURISM) + building.getPotentialTourismPerTurn());
 		outputs.put(Outputs.GROWTH_FOOD, outputs.get(Outputs.GROWTH_FOOD) + building.getFoodAddedByGrowthModifier());
 		outputs.put(Outputs.HAPPINESS, outputs.get(Outputs.HAPPINESS) + building.getHappinessPerTurn());
 		outputs.put(Outputs.GA_POINTS, outputs.get(Outputs.GA_POINTS) + building.getPotentialGreatArtistPoints());
@@ -507,10 +517,21 @@ public class Project implements Buildable {
 	}
 
 	public double getTourismPerTurn() {
-		return tourism + getTourismFromGreatWorks();
+		return tourism;
 	}
 	
-	protected double getTourismFromGreatWorks() {
+	public double getPotentialTourismPerTurn() {
+		double tourismFromBuildings = getTourismPerTurn();
+		double greatWorksTourism = getTourismFromGreatWorks() * (1 + greatWorkTourismModifier + city.getGreatWorkTourismModifier()) + (city.getTourismFromGreatWorks() * greatWorkTourismModifier);
+		
+		double tourismFromWonderCulture = cultureConversionToTourismRate * city.getCultureFromWorldWonders();
+		if (this instanceof Wonder && !(this instanceof NationalWonder)) {
+			tourismFromWonderCulture += getBaseCulturePerTurn() * city.getCultureConversionToTourismRate();
+		}
+		return tourismFromBuildings + greatWorksTourism + tourismFromWonderCulture;
+	}
+	
+	public double getTourismFromGreatWorks() {
 		double tourismFromGreatWorks = 0;
 		for (GreatWorkSlot slot : gwofArtSlots) {
 			if (!slot.isEmpty()) {

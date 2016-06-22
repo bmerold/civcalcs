@@ -15,7 +15,8 @@ public enum UnitEnum {
 	GREAT_WRITER,
 	CARGO_SHIP(Tech.SAILING),
 	GREAT_SCIENTIST,
-	GREAT_ARTIST;
+	GREAT_ARTIST,
+	GREAT_MUSICIAN;
 
 	private Tech requiredTech;
 
@@ -65,6 +66,9 @@ public enum UnitEnum {
 			break;
 		case GREAT_ARTIST:
 			unit = new GreatArtist(player);
+			break;
+		case GREAT_MUSICIAN:
+			unit = new GreatMusician(player);
 			break;
 		default:
 			throw new RuntimeException("Unhandled unit creation for " + this);

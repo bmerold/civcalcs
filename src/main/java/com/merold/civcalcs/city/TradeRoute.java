@@ -1,5 +1,7 @@
 package com.merold.civcalcs.city;
 
+import com.merold.civcalcs.civilizations.Influence;
+import com.merold.civcalcs.socialpolicies.SocialPolicy;
 import com.merold.civcalcs.units.Unit;
 
 public class TradeRoute {
@@ -8,36 +10,40 @@ public class TradeRoute {
 	private TargetTradeCity targetCity;
 	public RouteType routeType;
 	public Unit assignedUnit = null;
-	
+
 	public boolean isAvailable() {
 		return assignedUnit == null;
 	}
-	
+
 	public TradeRoute(City sourceCity, TargetTradeCity targetCity, RouteType type) {
 		this.sourceCity = sourceCity;
 		this.targetCity = targetCity;
 		this.routeType = type;
 	}
-	
+
 	public Double getGoldYield() {
 		double baseGold = 1;
 		double goldFromSourceCity = 0.05 * sourceCity.getCityGold();
 		double goldFromTargetCity = targetCity.getTotalGold();
 		double goldFromResources = 0.5 * targetCity.getNumDifferentResources();
-		double goldFromBuildings = targetCity.getBonusGoldFromBuildings() + sourceCity.getTradeRouteGoldFromBuildings(this);
+		double goldFromBuildings = targetCity.getBonusGoldFromBuildings()
+				+ sourceCity.getTradeRouteGoldFromBuildings(this);
 		double totalGold = baseGold;
 		totalGold += goldFromSourceCity;
 		totalGold += goldFromTargetCity;
 		totalGold += goldFromResources;
 		totalGold += goldFromBuildings;
-		
+
 		if (routeType == RouteType.SEA) {
-			totalGold = totalGold *2;
+			totalGold = totalGold * 2;
+			if (this.sourceCity.getOwner().hasAdopted(SocialPolicy.TREASURE_FLEETS)) {
+				totalGold += 4;
+			}
 		}
 		return totalGold;
-		
+
 	}
-	
+
 	public City getSourceCity() {
 		return sourceCity;
 	}
@@ -47,7 +53,24 @@ public class TradeRoute {
 	}
 
 	public double getScienceYield() {
-		return 0;
+		double science = 0;
+		switch (targetCity.getCivInfluence()) {
+		case INFLUENTIAL:
+			science = 3;
+			break;
+		case FAMILIAR:
+			science = 1;
+			break;
+		case POPULAR:
+			science = 2;
+			break;
+		case DOMINANT:
+			science = 4;
+			break;
+		default:
+			break;
+		}
+		return science;
 	}
 
 	public void assignUnit(Unit unit) {
@@ -57,11 +80,11 @@ public class TradeRoute {
 			throw new RuntimeException("Can't assign a new Caravan/Cargo Ship to a route that already has one.");
 		}
 	}
-	
 
 	public void unassignUnit(Unit unit) {
 		if (assignedUnit == unit) {
 			assignedUnit = null;
+			
 		} else {
 			throw new RuntimeException("Can't unassign a Caravan/Cargo Ship from a route it is not already assigned.");
 		}
