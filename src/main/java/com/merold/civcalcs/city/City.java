@@ -62,7 +62,7 @@ public class City {
 	private double foodProduced;
 	private int[] foodToGrow = { 0, 15, 24, 33, 44, 55, 66, 77, 89, 101, 114, 126, 139, 152, 165, 179, 193, 207, 221,
 			235, 249, 264, 279, 294, 309, 324, 340, 355, 371, 387, 403, 419, 435, 452, 468, 485, 502, 519, 536, 553,
-			570 };
+			570, 587, 604, 623 };
 	private double goldModifier = 0;
 	private double greatArtistPoints;
 	private double greatEngineerPoints = 0;
@@ -99,6 +99,7 @@ public class City {
 	private double cityGold;
 	private double greatWorkTourismModifier;
 	private double baseTourismFromGreatWorks;
+	private double baseTourism;
 
 	public City(String name, Player owner, Tile startingTile, List<Tile> tilesInBorder) {
 		this.name = name;
@@ -197,18 +198,43 @@ public class City {
 	}
 
 	private double calculateTourism() {
-		double tourism = 0;
 		baseTourismFromGreatWorks = calculateTourismFromGreatWorks();
 		greatWorkTourismModifier = calculateTourismModifierForGreatWorks();
 		cultureConversionToTourismRate = calculateCultureConversionToTourismRate();
+		tourismModifier = calculateTourismModifier();
+		baseTourism = 0;
 		double tourismFromGreatWorks = baseTourismFromGreatWorks * (1 + greatWorkTourismModifier);
-		double tourismFromCultureConversion = cultureConversionToTourismRate * (getCultureFromWorldWonders()); // +
-																												// calculateCultureFromTerrain());
+		double tourismFromThemingBonus = 4; // TODO: Calculate Tourism Theming Bonus.
+		double tourismFromCultureConversion = Math
+				.floor(cultureConversionToTourismRate * (getCultureFromWorldWonders() + calculateCultureFromTerrain()));
+		double tourismFromBuildingsConstructedByFaith = calculateTourismFromBuildingsConstructedByFaith();
+		double tourismFromReligiousArt = 0; // TODO: Calculate this.
 		double tourismFromBuildings = calculateTourismFromBuildings();
-		tourism += tourismFromGreatWorks;
-		tourism += tourismFromCultureConversion;
-		tourism += tourismFromBuildings;
+		baseTourism += tourismFromGreatWorks;
+		baseTourism += tourismFromCultureConversion;
+		baseTourism += tourismFromBuildingsConstructedByFaith;
+		baseTourism += tourismFromReligiousArt;
+		baseTourism += tourismFromBuildings;
+		baseTourism += tourismFromThemingBonus;
+
+		return Math.floor(baseTourism * (tourismModifier + 1));
+	}
+
+	private double calculateTourismFromBuildingsConstructedByFaith() {
+		double tourism = 0;
+		if (owner.believes(Belief.SACRED_SITES)) {
+			tourism = buildings.stream().filter(t -> (t.getType() == BuildingEnum.MOSQUE
+					|| t.getType() == BuildingEnum.PAGODA || t.getType() == BuildingEnum.CATHEDRAL)).count() * 2;
+		}
 		return tourism;
+	}
+
+	private double calculateTourismModifier() {
+		double modifier = 0;
+		for (Project building : buildings) {
+			modifier += building.getTourismModifier();
+		}
+		return modifier;
 	}
 
 	public double getCultureConversionToTourismRate() {
@@ -658,7 +684,7 @@ public class City {
 		double cultureFromBuildings = calculateCultureFromBuildings();
 		double cultureFromPolicies = calculateCultureFromPolicies();
 		double cultureFromSpecialists = calculateCultureFromSpecialists();
-		double cultureFromGreatWorks = calculateCultureFromGreatWorks();
+		double cultureFromGreatWorks = calculateCultureFromGreatWorks() + 4; // TODO: Calculate Culture Themeing bonus.
 		double cultureFromReligion = calculateCultureFromReligion();
 		double cultureFromTerrain = calculateCultureFromTerrain();
 		baseCulture += cultureFromBuildings;
@@ -674,6 +700,10 @@ public class City {
 	private double calculateCultureFromGreatWorks() {
 		double cultureFromGreatWorks = buildings.stream().flatMap(t -> t.getGreatWorks().stream())
 				.filter(t -> !t.isEmpty()).count() * 2;
+		if (owner.hasAdopted(SocialPolicy.CREATIVE_EXPRESSION)) {
+			cultureFromGreatWorks += buildings.stream().flatMap(t -> t.getGreatWorks().stream())
+					.filter(t -> !t.isEmpty()).count();
+		}
 		return cultureFromGreatWorks;
 	}
 
@@ -808,7 +838,7 @@ public class City {
 	private double calculateFoodFromTerrain() {
 		double food = 0;
 
-		food += startingTile.getFoodOutput();
+		food += startingTile.getFoodOutput() + 4; //TODO: Implement Maritime City State Bonuses
 		for (Tile tile : tiles) {
 			if (tile.isWorked()) {
 				food += tile.getFoodOutput();
@@ -834,8 +864,8 @@ public class City {
 		baseGold = 0;
 		double goldFromTiles = calculateGoldFromTiles();
 		double goldFromBuildings = calculateGoldFromBuildings();
-		double goldFromReligions = calculateGoldFromReligion();
 		double goldFromSpecialists = calculateGoldFromSpecialists();
+		double goldFromReligions = calculateGoldFromReligion();
 		goldModifier = calculateGoldModifier();
 
 		baseGold += goldFromTiles;
@@ -1148,7 +1178,7 @@ public class City {
 		baseScience += extraFromPopulation;
 		baseScience += scienceFromReligion;
 
-		double scienceFromTradeRoutes = tradeRoutes.stream().mapToDouble(t -> t.getScienceYield()).sum();
+		double scienceFromTradeRoutes = tradeRoutes.stream().filter(t -> t.isAvailable() == false).mapToDouble(t -> t.getScienceYield()).sum();
 
 		return (baseScience * (1 + scienceModifier)) + scienceFromTradeRoutes;
 	}
@@ -1315,6 +1345,7 @@ public class City {
 	double cultureConversionToTourismRate = 0;
 	boolean isWeLoveTheKingDay = false;
 	double weLoveTheKingDayEndTurn = 0;
+	private double tourismModifier = 0;
 
 	public void startWeLoveTheKingDay() {
 		this.isWeLoveTheKingDay = true;
@@ -1327,5 +1358,14 @@ public class City {
 			isWeLoveTheKingDay = false;
 		}
 		return isWeLoveTheKingDay;
+	}
+
+	public double getTourismModifier() {
+		return tourismModifier;
+	}
+
+	public double getBaseTourism() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

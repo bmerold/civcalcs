@@ -13,13 +13,4 @@ public class Mosque extends Building {
 		happinessPerTurn = 1;
 	}
 
-	@Override
-	public double getTourismPerTurn() {
-		double tourism = 0;
-		if (owner.believes(Belief.SACRED_SITES)) {
-			tourism += 2;
-		}
-		return tourism;
-	}
-
 }

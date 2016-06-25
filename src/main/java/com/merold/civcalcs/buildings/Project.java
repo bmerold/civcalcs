@@ -522,13 +522,19 @@ public class Project implements Buildable {
 	
 	public double getPotentialTourismPerTurn() {
 		double tourismFromBuildings = getTourismPerTurn();
+		double tourism = 0;
 		double greatWorksTourism = getTourismFromGreatWorks() * (1 + greatWorkTourismModifier + city.getGreatWorkTourismModifier()) + (city.getTourismFromGreatWorks() * greatWorkTourismModifier);
 		
 		double tourismFromWonderCulture = cultureConversionToTourismRate * city.getCultureFromWorldWonders();
 		if (this instanceof Wonder && !(this instanceof NationalWonder)) {
 			tourismFromWonderCulture += getBaseCulturePerTurn() * city.getCultureConversionToTourismRate();
 		}
-		return tourismFromBuildings + greatWorksTourism + tourismFromWonderCulture;
+		
+		tourism += tourismFromBuildings;
+		tourism += greatWorksTourism;
+		tourism += tourismFromWonderCulture;
+		
+		return (tourism * (1 + city.getTourismModifier())) + (city.getBaseTourism() * tourismModifier);
 	}
 	
 	public double getTourismFromGreatWorks() {

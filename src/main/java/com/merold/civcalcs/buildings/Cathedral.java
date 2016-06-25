@@ -15,14 +15,5 @@ public class Cathedral extends Building {
 		greatWorkOfArtSlots = 1;
 		gwofArtSlots.add(new GreatWorkSlot());
 	}
-	
-	@Override
-	public double getTourismPerTurn() {
-		double tourism = 0;
-		if (owner.believes(Belief.SACRED_SITES)) {
-			tourism += 2;
-		}
-		return tourism;
-	}
 
 }

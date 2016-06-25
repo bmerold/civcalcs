@@ -15,6 +15,10 @@ public class Academy extends Improvement {
 		if (tile.getOwner().hasAdopted(SocialPolicy.NEW_DEAL)) {
 			science += 4;
 		}
+		
+		if (tile.getOwner().hasDiscoveredTech(Tech.ATOMIC_THEORY)) {
+			science += 2;
+		}
 		return science;
 	}
 	@Override

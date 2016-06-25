@@ -669,7 +669,7 @@ public class App {
 		Civilization persia = new Civilization("Persia", Influence.POPULAR);
 		Civilization theAztecs = new Civilization("The Aztecs", Influence.POPULAR);
 		Civilization theIncas = new Civilization("The Incas", Influence.POPULAR);
-		TargetTradeCity tenoch = new TargetTradeCity("Tenochtitlan", 6, 0.52, 1, theAztecs);
+		TargetTradeCity tenoch = new TargetTradeCity("Tenochtitlan", 6, 0.87, 3, theAztecs);
 		TargetTradeCity buenesAires = new TargetTradeCity("Buenes Aires", 6, 0.4, 0);
 		TargetTradeCity belGrade = new TargetTradeCity("Belgrade", 6, 0.75, 0);
 		TargetTradeCity geneva = new TargetTradeCity("Geneva", 6, 0.68, 0);
@@ -953,11 +953,11 @@ public class App {
 		game.setCurrentTurn(274);
 		player.discover(REFRIGERATION);
 		player.adopt(SocialPolicy.TREASURE_FLEETS);
-		TargetTradeCity constantinople = new TargetTradeCity("Constantinople", 6, 1.18, 1, byzantium);
+		TargetTradeCity constantinople = new TargetTradeCity("Constantinople", 6, 1.27, 1, byzantium);
 		TargetTradeCity milan = new TargetTradeCity("Milan", 5, 0.29, 0);
 		TargetTradeCity monaco = new TargetTradeCity("Monaco", 6, 0.68, 0);
 		TargetTradeCity ormus = new TargetTradeCity("Ormus", 6, 0.45, 0);
-		TargetTradeCity delhi = new TargetTradeCity("Delhi", 5, 1.72, 2, india);
+		TargetTradeCity delhi = new TargetTradeCity("Delhi", 5, 1.87, 2, india);
 		capital.addAvailableTradeRoute(constantinople, RouteType.SEA);
 		capital.addAvailableTradeRoute(milan, RouteType.SEA);
 		capital.addAvailableTradeRoute(monaco, RouteType.SEA);
@@ -1096,15 +1096,84 @@ public class App {
 		game.setCurrentTurn(313);
 		player.adopt(SocialPolicy.MEDIA_CULTURE);
 
+		game.setCurrentTurn(314);
+		capital.completeBuildable();
+		capital.startBuilding(BuildingEnum.CRISTO_REDENTOR);
+
+		game.setCurrentTurn(315);
+		player.discover(ELECTRONICS);
+
+
+		game.setCurrentTurn(322);
+		capital.grow();
+		capital.employ(new Scientist());
+		capital.completeBuildable();
+		capital.startBuilding(BuildingEnum.POLICE_STATION);
+		player.adopt(SocialPolicy.CREATIVE_EXPRESSION);
+		
+		game.setCurrentTurn(323);
+		player.startGoldenAge();
+		capital.completeBuildable();
+		capital.startBuilding(NATIONAL_INTELLIGENCE_AGENCY);
+		
+		game.setCurrentTurn(324);
+		player.startGoldenAge();
+		capital.completeBuildable();
+		capital.startBuilding(BuildingEnum.MILITARY_BASE);
+		player.discover(BALLISTICS);
+		
+		game.setCurrentTurn(327);
+		capital.completeBuildable();
+		
+		game.setCurrentTurn(330);
+		player.adopt(SocialPolicy.THEIR_FINEST_HOUR);
+		
+		game.setCurrentTurn(333);
+		player.discover(Tech.COMBUSTION);
+		
+		game.setCurrentTurn(338);
+		player.adopt(SocialPolicy.SPACE_PROCUREMENTS);
+		
+		game.setCurrentTurn(339);
+		capital.addGreatWorkOfArt();
+		
+		game.setCurrentTurn(340);
+		player.discover(PENICILLIN);
+		capital.grow();
+		capital.employ(new Scientist());
+		capital.grow();
+		capital.employ(new Merchant());
+		capital.startBuilding(MEDICAL_LAB);
+		TargetTradeCity nicaea = new TargetTradeCity("Nicaea", 5, .06, 0, byzantium);
+		TargetTradeCity adrianople = new TargetTradeCity("Adrianople", 6, .45, 1, byzantium);
+		capital.addAvailableTradeRoute(adrianople, RouteType.SEA);
+		capital.addAvailableTradeRoute(nicaea, RouteType.SEA);
+		cargoShip5.establishTradeRoute();
+		theAztecs.setInfluence(Influence.DOMINANT);
+		mongolia.setInfluence(Influence.DOMINANT);
+		byzantium.setInfluence(Influence.INFLUENTIAL);
+		india.setInfluence(Influence.INFLUENTIAL);
+		
+		game.setCurrentTurn(344);
+		capital.completeBuildable();
+		capital.startBuilding(UnitEnum.CARGO_SHIP);
+		
+		game.setCurrentTurn(344);
+		capital.completeBuildable();
+		player.discover(ATOMIC_THEORY);
+		CargoShip cargoShip7 = new CargoShip(player);
+		cargoShip7.setHomeCity(capital);
+		cargoShip7.establishTradeRoute();
+		
 		System.out.println(game.getTurnsLeft() + " turns left.");
 		// player.printUnitList();
 		capital.printOutput();
-		// capital.getTradeRoutes().stream().sorted((t1, t2) ->
-		// t2.getGoldYield().compareTo(t1.getGoldYield()))
-		// .forEach(t -> System.out.println(t.getSourceCity().getName() + " -> "
-		// + t.getTargetCity().getName()
-		// + ": " + MathUtil.round(t.getGoldYield(), 1) + (t.isAvailable() ? ""
-		// : "(*)")));
+		 capital.getTradeRoutes().stream().sorted((t1, t2) ->
+		 t2.getGoldYield().compareTo(t1.getGoldYield()))
+		 .forEach(t -> System.out.println(t.getSourceCity().getName() + " -> "
+		 + t.getTargetCity().getName()
+		 + ": " + MathUtil.round(t.getGoldYield(), 1) + (t.isAvailable() ? ""
+		 : "(*)")));
 
 		printAvailableBuildings(game, capital, player);
 

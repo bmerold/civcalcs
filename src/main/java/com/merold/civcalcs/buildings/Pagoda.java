@@ -12,14 +12,5 @@ public class Pagoda extends Building {
 		faithPerTurn = 2;
 		happinessPerTurn = 2;
 	}
-	
-	@Override
-	public double getTourismPerTurn() {
-		double tourism = 0;
-		if (owner.believes(Belief.SACRED_SITES)) {
-			tourism += 2;
-		}
-		return tourism;
-	}
 
 }
