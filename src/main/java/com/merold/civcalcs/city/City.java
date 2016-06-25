@@ -62,7 +62,7 @@ public class City {
 	private double foodProduced;
 	private int[] foodToGrow = { 0, 15, 24, 33, 44, 55, 66, 77, 89, 101, 114, 126, 139, 152, 165, 179, 193, 207, 221,
 			235, 249, 264, 279, 294, 309, 324, 340, 355, 371, 387, 403, 419, 435, 452, 468, 485, 502, 519, 536, 553,
-			570, 587, 604, 623 };
+			570, 587, 604, 623, 640, 658 };
 	private double goldModifier = 0;
 	private double greatArtistPoints;
 	private double greatEngineerPoints = 0;
@@ -135,6 +135,7 @@ public class City {
 					addBuilding(bonusBuilding);
 				}
 			}
+			building.connectResources();
 			addBuilding(building);
 		} else if (buildable instanceof Unit) {
 			owner.recruit((Unit) buildable);
@@ -838,7 +839,7 @@ public class City {
 	private double calculateFoodFromTerrain() {
 		double food = 0;
 
-		food += startingTile.getFoodOutput() + 4; //TODO: Implement Maritime City State Bonuses
+		food += startingTile.getFoodOutput() + 3; //TODO: Implement Maritime City State Bonuses
 		for (Tile tile : tiles) {
 			if (tile.isWorked()) {
 				food += tile.getFoodOutput();

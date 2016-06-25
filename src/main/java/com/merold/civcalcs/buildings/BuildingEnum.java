@@ -43,6 +43,7 @@ import com.merold.civcalcs.buildings.wonders.Neuschwanstein;
 import com.merold.civcalcs.buildings.wonders.NotreDame;
 import com.merold.civcalcs.buildings.wonders.Oracle;
 import com.merold.civcalcs.buildings.wonders.Parthenon;
+import com.merold.civcalcs.buildings.wonders.Pentagon;
 import com.merold.civcalcs.buildings.wonders.Petra;
 import com.merold.civcalcs.buildings.wonders.PorcelainTower;
 import com.merold.civcalcs.buildings.wonders.Prora;
@@ -52,6 +53,7 @@ import com.merold.civcalcs.buildings.wonders.SistineChapel;
 import com.merold.civcalcs.buildings.wonders.StatueOfLiberty;
 import com.merold.civcalcs.buildings.wonders.StatueOfZeus;
 import com.merold.civcalcs.buildings.wonders.Stonehenge;
+import com.merold.civcalcs.buildings.wonders.SydneyOperaHouse;
 import com.merold.civcalcs.buildings.wonders.TajMahal;
 import com.merold.civcalcs.buildings.wonders.TempleOfArtemis;
 import com.merold.civcalcs.buildings.wonders.TerraCottaArmy;
@@ -180,7 +182,9 @@ public enum BuildingEnum {
 	PRORA(FLIGHT, SocialPolicy.AUTOCRACY),
 	KREMLIN(RAILROAD, SocialPolicy.ORDER),
 	NEUSCHWANSTEIN(RAILROAD, TerrainFeature.MOUNTAIN),
-	CRISTO_REDENTOR(PLASTICS);
+	CRISTO_REDENTOR(PLASTICS),
+	PENTAGON(COMBINED_ARMS),
+	SYDNEY_OPERA_HOUSE(ECOLOGY, TerrainFeature.BORDERS_COAST);
 
 	public boolean isRequiresHolyCity() {
 		return requiresHolyCity;
@@ -618,6 +622,12 @@ public enum BuildingEnum {
 			break;
 		case CRISTO_REDENTOR:
 			building = new CristoRedentor(city, owner);
+			break;
+		case PENTAGON:
+			building = new Pentagon(city, owner);
+			break;
+		case SYDNEY_OPERA_HOUSE:
+			building = new SydneyOperaHouse(city, owner);
 			break;
 		default:
 			throw new RuntimeException("Unhandled BuildingEnum " + this);

@@ -23,8 +23,23 @@ public class CargoShip extends Unit {
 	@Override
 	public double getGoldYield(City city) {
 		if (city.getOwner().hasOpenTradeRoutes()) {
-			return city.getTradeRoutes().stream().filter(t -> t.isAvailable()).filter(t -> t.routeType == RouteType.SEA)
-					.sorted((t1, t2) -> t2.getGoldYield().compareTo(t1.getGoldYield())).findFirst()
+			return city.getTradeRoutes()
+					.stream()
+					.filter(t -> t.isAvailable())
+					.filter(t -> t.routeType == RouteType.SEA)
+					.filter(t -> {
+						if (t.getSourceCity().getOwner().getGame().isCityStateEmbargo() == false) {
+							return true;
+						} else {
+							if (t.getTargetCity().getCiv() == null) {
+								return false;
+							} else {
+								return true;
+							}
+						}
+						})
+					.sorted((t1, t2) -> t2.getGoldYield().compareTo(t1.getGoldYield()))
+					.findFirst()
 					.map(t -> t.getGoldYield()).orElse((double) 0);
 		} else {
 			return 0;

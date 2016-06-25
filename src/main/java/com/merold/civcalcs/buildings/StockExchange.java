@@ -2,6 +2,7 @@ package com.merold.civcalcs.buildings;
 
 import com.merold.civcalcs.city.City;
 import com.merold.civcalcs.player.Player;
+import com.merold.civcalcs.socialpolicies.SocialPolicy;
 import com.merold.civcalcs.specialists.SpecialistSlot;
 
 public class StockExchange extends Building {
@@ -13,6 +14,15 @@ public class StockExchange extends Building {
 		merchants.add(new SpecialistSlot());
 		goldPerTurn = 3;
 		goldModifier = 0.25;
+	}
+	
+	@Override
+	public double getHappinessPerTurn() {
+		double happiness = 0;
+		if (owner.hasAdopted(SocialPolicy.CAPITALISM)) {
+			happiness +=  1;
+		}
+		return happiness;
 	}
 
 }

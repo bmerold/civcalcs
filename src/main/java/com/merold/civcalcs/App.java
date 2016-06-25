@@ -1165,6 +1165,65 @@ public class App {
 		cargoShip7.setHomeCity(capital);
 		cargoShip7.establishTradeRoute();
 		
+		game.setCurrentTurn(348);
+		player.adopt(SocialPolicy.CAPITALISM);
+		
+		game.setCurrentTurn(350);
+		game.completed(FORBIDDEN_PALACE);
+		
+		game.setCurrentTurn(352);
+		capital.addGreatWorkOfArt();
+		capital.addGreatWorkOfArt();
+		capital.grow();
+		capital.employ(new Merchant());
+		
+		game.setCurrentTurn(354);
+		player.discover(RADAR);
+		capital.startBuilding(AIRPORT);
+		
+		game.setCurrentTurn(355);
+		capital.addGreatWorkOfArt();
+		india.setInfluence(Influence.DOMINANT);
+		
+		game.setCurrentTurn(357);
+		capital.completeBuildable();
+		player.discover(COMBINED_ARMS);
+		
+		game.setCurrentTurn(358);
+		player.adopt(SocialPolicy.URBANIZATION);
+		capital.startBuilding(PENTAGON);
+		
+		game.setCurrentTurn(359);
+		capital.addGreatWorkOfWriting();
+		
+		game.setCurrentTurn(361);
+		player.discover(ECOLOGY);
+		
+		game.setCurrentTurn(363);
+		capital.completeBuildable();
+		capital.startBuilding(SYDNEY_OPERA_HOUSE);
+		capital.grow();
+		player.discover(NUCLEAR_FISSION);
+		grid[1][4].work(capital);
+		
+		game.setCurrentTurn(364);
+		capital.completeBuildable();
+		capital.startBuilding(RECYCLING_CENTER);
+		player.adopt(SocialPolicy.TREATY_ORGANIZATION);
+		
+		game.setCurrentTurn(365);
+		player.startGoldenAge();
+		capital.addGreatWorkOfMusic();
+		capital.addGreatWorkOfMusic();
+		capital.completeBuildable();
+		capital.startBuilding(HYDRO_PLANT);
+		
+		game.setCurrentTurn(367);
+		game.completed(MACHU_PICH);
+		
+		game.setCurrentTurn(368);
+		capital.completeBuildable();
+		
 		System.out.println(game.getTurnsLeft() + " turns left.");
 		// player.printUnitList();
 		capital.printOutput();

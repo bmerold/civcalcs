@@ -523,20 +523,40 @@ public class Project implements Buildable {
 	public double getPotentialTourismPerTurn() {
 		double tourismFromBuildings = getTourismPerTurn();
 		double tourism = 0;
-		double greatWorksTourism = getTourismFromGreatWorks() * (1 + greatWorkTourismModifier + city.getGreatWorkTourismModifier()) + (city.getTourismFromGreatWorks() * greatWorkTourismModifier);
+		double greatWorksTourism = calculateTourismFromGreatWorks();
 		
 		double tourismFromWonderCulture = cultureConversionToTourismRate * city.getCultureFromWorldWonders();
 		if (this instanceof Wonder && !(this instanceof NationalWonder)) {
 			tourismFromWonderCulture += getBaseCulturePerTurn() * city.getCultureConversionToTourismRate();
 		}
 		
+		double tourismFromTerrainCulture = cultureConversionToTourismRate * city.calculateCultureFromTerrain();
+		double tourismFromNaturalWonderCulture = cultureConversionToTourismRate * 0;
+		double tourismFromCultureConversion = tourismFromWonderCulture + tourismFromTerrainCulture + tourismFromNaturalWonderCulture;
+		
 		tourism += tourismFromBuildings;
 		tourism += greatWorksTourism;
-		tourism += tourismFromWonderCulture;
+		tourism += tourismFromCultureConversion;
 		
 		return (tourism * (1 + city.getTourismModifier())) + (city.getBaseTourism() * tourismModifier);
 	}
 	
+	private double calculateTourismFromGreatWorks() {
+		double tourism = 0;
+		
+		double greatWorksTourism = getTourismFromGreatWorks();
+		double tourismModifier = greatWorkTourismModifier;
+		double cityGWTourismModifier = city.getGreatWorkTourismModifier();
+		double thisGWTourismModifier = 1 + tourismModifier + cityGWTourismModifier;
+		double thisGWTourismTotal = greatWorksTourism * thisGWTourismModifier;
+		
+		double cityGreatWorksTourism = city.getTourismFromGreatWorks();
+		double thisGWTourismAddedByModifier = cityGreatWorksTourism * tourismModifier;
+		
+		tourism = thisGWTourismTotal + thisGWTourismAddedByModifier;
+		return tourism;
+	}
+
 	public double getTourismFromGreatWorks() {
 		double tourismFromGreatWorks = 0;
 		for (GreatWorkSlot slot : gwofArtSlots) {
@@ -907,5 +927,9 @@ public class Project implements Buildable {
 						"Can't unemploy an scientist in a building with only empty scientist slots.");
 			}
 		}
+	}
+
+	public void connectResources() {
+		return;
 	}
 }
