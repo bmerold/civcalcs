@@ -14,6 +14,7 @@ public enum UnitEnum {
 	WORK_BOAT(Tech.SAILING),
 	GREAT_WRITER,
 	CARGO_SHIP(Tech.SAILING),
+	CARAVAN(Tech.ANIMAL_HUSBANDRY),
 	GREAT_SCIENTIST,
 	GREAT_ARTIST,
 	GREAT_MUSICIAN;
@@ -36,6 +37,9 @@ public enum UnitEnum {
 			break;
 		case MAORI_WARRIOR:
 			unit = new MaoriWarrior(player);
+			break;
+		case CARAVAN:
+			unit = new Caravan(player);
 			break;
 		case GREAT_PROPHET:
 			unit = new GreatProphet(player);

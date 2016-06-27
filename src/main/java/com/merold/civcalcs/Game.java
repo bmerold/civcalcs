@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.merold.civcalcs.buildings.BuildingEnum;
-import com.merold.civcalcs.city.City;
 import com.merold.civcalcs.player.Player;
 import com.merold.civcalcs.units.CargoShip;
 

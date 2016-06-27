@@ -18,6 +18,7 @@ public class HydroPlant extends Building {
 		if (enhancer != null) {
 			productionAddedByEnhancer += city.getTiles().stream()
 					.filter(t -> t.isWorked())
+					.filter(t -> t != t.getWorkedBy().getStartingTile())
 					.filter(t -> enhancer.hasTerrainFeatureProductionBonus(t))
 					.count();
 		}

@@ -1,6 +1,8 @@
 package com.merold.civcalcs.tiles;
 
-import static com.merold.civcalcs.tiles.Resource.*;
+import static com.merold.civcalcs.tiles.Resource.CATTLE;
+import static com.merold.civcalcs.tiles.Resource.HORSES;
+import static com.merold.civcalcs.tiles.Resource.SHEEP;
 
 import com.merold.civcalcs.science.Tech;
 

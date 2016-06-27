@@ -1,6 +1,74 @@
 package com.merold.civcalcs.buildings;
 
-import static com.merold.civcalcs.science.Tech.*;
+import static com.merold.civcalcs.science.Tech.ACOUSTICS;
+import static com.merold.civcalcs.science.Tech.ARCHAEOLOGY;
+import static com.merold.civcalcs.science.Tech.ARCHERY;
+import static com.merold.civcalcs.science.Tech.ARCHITECTURE;
+import static com.merold.civcalcs.science.Tech.ASTRONOMY;
+import static com.merold.civcalcs.science.Tech.BANKING;
+import static com.merold.civcalcs.science.Tech.BIOLOGY;
+import static com.merold.civcalcs.science.Tech.BRONZE_WORKING;
+import static com.merold.civcalcs.science.Tech.CALENDAR;
+import static com.merold.civcalcs.science.Tech.CHIVALRY;
+import static com.merold.civcalcs.science.Tech.CIVIL_SERVICE;
+import static com.merold.civcalcs.science.Tech.COMBINED_ARMS;
+import static com.merold.civcalcs.science.Tech.COMPASS;
+import static com.merold.civcalcs.science.Tech.CONSTRUCTION;
+import static com.merold.civcalcs.science.Tech.CURRENCY;
+import static com.merold.civcalcs.science.Tech.DRAMA_AND_POETRY;
+import static com.merold.civcalcs.science.Tech.ECOLOGY;
+import static com.merold.civcalcs.science.Tech.ECONOMICS;
+import static com.merold.civcalcs.science.Tech.EDUCATION;
+import static com.merold.civcalcs.science.Tech.ELECTRICITY;
+import static com.merold.civcalcs.science.Tech.ENGINEERING;
+import static com.merold.civcalcs.science.Tech.FLIGHT;
+import static com.merold.civcalcs.science.Tech.GUILDS;
+import static com.merold.civcalcs.science.Tech.GUNPOWDER;
+import static com.merold.civcalcs.science.Tech.HORSEBACK_RIDING;
+import static com.merold.civcalcs.science.Tech.INDUSTRIALIZATION;
+import static com.merold.civcalcs.science.Tech.IRON_WORKING;
+import static com.merold.civcalcs.science.Tech.MACHINERY;
+import static com.merold.civcalcs.science.Tech.MASONRY;
+import static com.merold.civcalcs.science.Tech.MATHEMATICS;
+import static com.merold.civcalcs.science.Tech.METALLURGY;
+import static com.merold.civcalcs.science.Tech.METAL_CASTING;
+import static com.merold.civcalcs.science.Tech.MILITARY_SCIENCE;
+import static com.merold.civcalcs.science.Tech.NAVIGATION;
+import static com.merold.civcalcs.science.Tech.NUCLEAR_FISSION;
+import static com.merold.civcalcs.science.Tech.OPTICS;
+import static com.merold.civcalcs.science.Tech.PENICILLIN;
+import static com.merold.civcalcs.science.Tech.PHILOSOPHY;
+import static com.merold.civcalcs.science.Tech.PHYSICS;
+import static com.merold.civcalcs.science.Tech.PLASTICS;
+import static com.merold.civcalcs.science.Tech.POTTERY;
+import static com.merold.civcalcs.science.Tech.PRINTING_PRESS;
+import static com.merold.civcalcs.science.Tech.RADAR;
+import static com.merold.civcalcs.science.Tech.RADIO;
+import static com.merold.civcalcs.science.Tech.RAILROAD;
+import static com.merold.civcalcs.science.Tech.REFRIGERATION;
+import static com.merold.civcalcs.science.Tech.REPLACEABLE_PARTS;
+import static com.merold.civcalcs.science.Tech.ROBOTICS;
+import static com.merold.civcalcs.science.Tech.SCIENTIFIC_THEORY;
+import static com.merold.civcalcs.science.Tech.STEEL;
+import static com.merold.civcalcs.science.Tech.TELECOMMUNICATIONS;
+import static com.merold.civcalcs.science.Tech.THEOLOGY;
+import static com.merold.civcalcs.science.Tech.THE_WHEEL;
+import static com.merold.civcalcs.science.Tech.TODO;
+import static com.merold.civcalcs.science.Tech.TRAPPING;
+import static com.merold.civcalcs.science.Tech.WRITING;
+import static com.merold.civcalcs.tiles.Resource.ALUMINUM;
+import static com.merold.civcalcs.tiles.Resource.CATTLE;
+import static com.merold.civcalcs.tiles.Resource.COAL;
+import static com.merold.civcalcs.tiles.Resource.GOLD;
+import static com.merold.civcalcs.tiles.Resource.HORSES;
+import static com.merold.civcalcs.tiles.Resource.IRON;
+import static com.merold.civcalcs.tiles.Resource.IVORY;
+import static com.merold.civcalcs.tiles.Resource.MARBLE;
+import static com.merold.civcalcs.tiles.Resource.SHEEP;
+import static com.merold.civcalcs.tiles.Resource.SILVER;
+import static com.merold.civcalcs.tiles.Resource.STONE;
+import static com.merold.civcalcs.tiles.Resource.URANIUM;
+
 import com.merold.civcalcs.Belief;
 import com.merold.civcalcs.buildings.nationalwonders.ArtistsGuild;
 import com.merold.civcalcs.buildings.nationalwonders.CircusMaximus;
@@ -27,6 +95,7 @@ import com.merold.civcalcs.buildings.wonders.CristoRedentor;
 import com.merold.civcalcs.buildings.wonders.EifelTower;
 import com.merold.civcalcs.buildings.wonders.ForbiddenPalace;
 import com.merold.civcalcs.buildings.wonders.GlobeTheater;
+import com.merold.civcalcs.buildings.wonders.GreatFirewall;
 import com.merold.civcalcs.buildings.wonders.GreatLibrary;
 import com.merold.civcalcs.buildings.wonders.GreatLighthouse;
 import com.merold.civcalcs.buildings.wonders.GreatMosqueOfDjenne;
@@ -64,11 +133,7 @@ import com.merold.civcalcs.science.Tech;
 import com.merold.civcalcs.socialpolicies.SocialPolicy;
 import com.merold.civcalcs.tiles.BaseTerrain;
 import com.merold.civcalcs.tiles.Resource;
-
-import static com.merold.civcalcs.tiles.Resource.*;
 import com.merold.civcalcs.tiles.TerrainFeature;
-
-import javafx.scene.effect.Glow;
 
 public enum BuildingEnum {
 	MONUMENT,
@@ -184,7 +249,8 @@ public enum BuildingEnum {
 	NEUSCHWANSTEIN(RAILROAD, TerrainFeature.MOUNTAIN),
 	CRISTO_REDENTOR(PLASTICS),
 	PENTAGON(COMBINED_ARMS),
-	SYDNEY_OPERA_HOUSE(ECOLOGY, TerrainFeature.BORDERS_COAST);
+	SYDNEY_OPERA_HOUSE(ECOLOGY, TerrainFeature.BORDERS_COAST),
+	GREAT_FIREWALL(Tech.COMPUTERS);
 
 	public boolean isRequiresHolyCity() {
 		return requiresHolyCity;
@@ -628,6 +694,9 @@ public enum BuildingEnum {
 			break;
 		case SYDNEY_OPERA_HOUSE:
 			building = new SydneyOperaHouse(city, owner);
+			break;
+		case GREAT_FIREWALL:
+			building = new GreatFirewall(city, owner);
 			break;
 		default:
 			throw new RuntimeException("Unhandled BuildingEnum " + this);

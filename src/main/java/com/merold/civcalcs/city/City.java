@@ -1,8 +1,13 @@
 package com.merold.civcalcs.city;
 
+import static com.merold.civcalcs.buildings.BuildingEnum.AQUEDUCT;
+import static com.merold.civcalcs.buildings.BuildingEnum.LEANING_TOWER_OF_PISA;
+import static com.merold.civcalcs.buildings.BuildingEnum.SISTINE_CHAPEL;
+import static com.merold.civcalcs.buildings.BuildingEnum.STATUE_OF_LIBERTY;
+import static com.merold.civcalcs.buildings.BuildingEnum.WINDMILL;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.merold.civcalcs.Belief;
 import com.merold.civcalcs.Religion;
@@ -11,8 +16,6 @@ import com.merold.civcalcs.buildings.BuildingEnum;
 import com.merold.civcalcs.buildings.Project;
 import com.merold.civcalcs.buildings.Shrine;
 import com.merold.civcalcs.buildings.Temple;
-
-import static com.merold.civcalcs.buildings.BuildingEnum.*;
 import com.merold.civcalcs.buildings.enhancers.WorkedTileEnhancer;
 import com.merold.civcalcs.buildings.nationalwonders.NationalWonder;
 import com.merold.civcalcs.buildings.wonders.AncientWonder;
@@ -21,7 +24,6 @@ import com.merold.civcalcs.buildings.wonders.Wonder;
 import com.merold.civcalcs.greatworks.GreatWorkOfArt;
 import com.merold.civcalcs.greatworks.GreatWorkOfMusic;
 import com.merold.civcalcs.greatworks.GreatWorkOfWriting;
-import com.merold.civcalcs.greatworks.GreatWorkSlot;
 import com.merold.civcalcs.player.Player;
 import com.merold.civcalcs.socialpolicies.SocialPolicy;
 import com.merold.civcalcs.socialpolicies.SocialPolicyUtil;
@@ -62,7 +64,7 @@ public class City {
 	private double foodProduced;
 	private int[] foodToGrow = { 0, 15, 24, 33, 44, 55, 66, 77, 89, 101, 114, 126, 139, 152, 165, 179, 193, 207, 221,
 			235, 249, 264, 279, 294, 309, 324, 340, 355, 371, 387, 403, 419, 435, 452, 468, 485, 502, 519, 536, 553,
-			570, 587, 604, 623, 640, 658 };
+			570, 587, 604, 623, 640, 658, 676, 694 };
 	private double goldModifier = 0;
 	private double greatArtistPoints;
 	private double greatEngineerPoints = 0;
@@ -1058,8 +1060,8 @@ public class City {
 		baseProduction = 0;
 		double productionFromTerrain = calculateProductionFromTerrain();
 		double productionFromBuildings = calculateProductionFromBuildings();
-		double productionFromReligion = calculateProductionFromReligion();
 		double productionFromSpecialists = calculateProductionFromSpecialists();
+		double productionFromReligion = calculateProductionFromReligion();
 
 		productionModifier = calculateProductionModifier(constructing);
 

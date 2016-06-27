@@ -1,6 +1,5 @@
 package com.merold.civcalcs.city;
 
-import com.merold.civcalcs.civilizations.Influence;
 import com.merold.civcalcs.socialpolicies.SocialPolicy;
 import com.merold.civcalcs.units.Unit;
 
@@ -33,6 +32,8 @@ public class TradeRoute {
 		totalGold += goldFromTargetCity;
 		totalGold += goldFromResources;
 		totalGold += goldFromBuildings;
+		
+		double modifier = 1;
 
 		if (routeType == RouteType.SEA) {
 			totalGold = totalGold * 2;
@@ -40,7 +41,13 @@ public class TradeRoute {
 				totalGold += 4;
 			}
 		}
-		return totalGold;
+		
+		if (routeType == RouteType.LAND) {
+			if (targetCity.isNextToRiver()) {
+				modifier += 0.25;
+			}
+		}
+		return totalGold * modifier;
 
 	}
 

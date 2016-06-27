@@ -80,26 +80,28 @@ public class Tile {
 	public double getProductionOutput() {
 		double production = productionOutput;
 		production += improvement.getProduction(this);
-		
+
 		if (owner.hasDiscoveredTech(Tech.SCIENTIFIC_THEORY) && resource == Resource.COAL) {
 			production += 1;
 		}
 
-		for (WorkedTileEnhancer enhancer : workedBy.getEnhancers()) {
-			if (enhancer.hasBaseTerrainFoodAndProductionBonus(this)) {
-				production += 1;
-			}
+		if (this.getWorkedBy().getStartingTile() != this) {
+			for (WorkedTileEnhancer enhancer : workedBy.getEnhancers()) {
+				if (enhancer.hasBaseTerrainFoodAndProductionBonus(this)) {
+					production += 1;
+				}
 
-			if (enhancer.hasProductionBonusResource(this)) {
-				production += 1;
-			}
+				if (enhancer.hasProductionBonusResource(this)) {
+					production += 1;
+				}
 
-			if (enhancer.hasTerrainFeatureProductionBonus(this)) {
-				production += 1;
-			}
+				if (enhancer.hasTerrainFeatureProductionBonus(this)) {
+					production += 1;
+				}
 
-			if (enhancer.hasProductionAndGoldBonusResource(this)) {
-				production += 1;
+				if (enhancer.hasProductionAndGoldBonusResource(this)) {
+					production += 1;
+				}
 			}
 		}
 
@@ -108,8 +110,9 @@ public class Tile {
 
 	@Override
 	public String toString() {
-		return "Tile [coordinates = (" + yCoord + "," + xCoord + "), worked = " + isWorked + ", baseTerrain=" + baseTerrain + ", terrainFeatures=" + terrainFeatures
-				+ ", improvement=" + improvement + ", resource=" + resource + "]";
+		return "Tile [coordinates = (" + yCoord + "," + xCoord + "), worked = " + isWorked + ", baseTerrain="
+				+ baseTerrain + ", terrainFeatures=" + terrainFeatures + ", improvement=" + improvement + ", resource="
+				+ resource + "]";
 	}
 
 	public int getFoodOutput() {
@@ -128,6 +131,10 @@ public class Tile {
 
 	private double combatModifier = 0;
 	private City workedBy;
+
+	public City getWorkedBy() {
+		return workedBy;
+	}
 
 	public void work(City workedBy) {
 		this.isWorked = true;
@@ -316,7 +323,7 @@ public class Tile {
 		culture += improvement.getCulture(this);
 		return culture;
 	}
-	
+
 	public double getFaithOutput() {
 		double faith = 0;
 		faith += improvement.getFaith(this);

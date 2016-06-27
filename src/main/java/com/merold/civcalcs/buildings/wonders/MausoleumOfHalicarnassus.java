@@ -1,12 +1,9 @@
 package com.merold.civcalcs.buildings.wonders;
 
-import java.util.List;
-
 import com.merold.civcalcs.buildings.BuildingEnum;
 import com.merold.civcalcs.buildings.enhancers.MausoleumEnhancer;
 import com.merold.civcalcs.city.City;
 import com.merold.civcalcs.player.Player;
-import com.merold.civcalcs.tiles.Tile;
 
 public class MausoleumOfHalicarnassus extends AncientWonder {
 

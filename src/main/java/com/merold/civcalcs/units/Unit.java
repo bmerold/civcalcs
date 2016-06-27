@@ -3,7 +3,6 @@ package com.merold.civcalcs.units;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.merold.civcalcs.buildings.Building;
 import com.merold.civcalcs.buildings.Outputs;
 import com.merold.civcalcs.city.Buildable;
 import com.merold.civcalcs.city.City;

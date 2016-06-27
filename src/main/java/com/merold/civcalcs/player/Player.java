@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.merold.civcalcs.Belief;
 import com.merold.civcalcs.Game;
-import com.merold.civcalcs.buildings.Building;
 import com.merold.civcalcs.buildings.BuildingEnum;
 import com.merold.civcalcs.buildings.wonders.Wonder;
 import com.merold.civcalcs.city.City;

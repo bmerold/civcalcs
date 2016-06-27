@@ -1,6 +1,5 @@
 package com.merold.civcalcs.buildings;
 
-import com.merold.civcalcs.Belief;
 import com.merold.civcalcs.city.City;
 import com.merold.civcalcs.greatworks.GreatWorkSlot;
 import com.merold.civcalcs.player.Player;
